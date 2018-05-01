@@ -1,0 +1,14 @@
+{
+  "name": "contract-web-app",
+  "description": "Progressive web app for contract network",
+  "version": "0.0.1",
+  "author": "Alex Chien",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "postversion": "git push && git push --tags && npm publish"
+  },
+  "dependencies": {
+    "express": "^4.13.4"
+  }
+}
