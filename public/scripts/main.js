@@ -112,17 +112,17 @@
     });
   };
 
-  var loadProjects = function() {
-    var e = document.getElementById('project-list');
+  var loadAssets = function() {
+    var e = document.getElementById('asset-list');
     while (e.firstChild) {
         e.removeChild(e.firstChild);
     }
 
-    get('http://localhost:3000/api/ProjectListing')
+    get('http://localhost:3000/api/BuildingMaterial')
       .then(res => {
         if (res) {
-          var projects = JSON.parse(res);
-          projects.forEach(o => {
+          var assets = JSON.parse(res);
+          assets.forEach(o => {
             // <ul id="project-list">
             //   <li>
             //     <a>Project 1</a>
@@ -153,27 +153,12 @@
             ul.style.display = "none";
             
             var li = document.createElement('li');
-            textnode = document.createTextNode('Listing Id: ' + o.listingId);
+            textnode = document.createTextNode('Asset Id: ' + o.assetId);
             li.appendChild(textnode);
             ul.appendChild(li);
 
             li = document.createElement('li');
-            textnode = document.createTextNode('Project: ' + o.project);
-            li.appendChild(textnode);
-            ul.appendChild(li);
-
-            li = document.createElement('li');
-            textnode = document.createTextNode('Construction Type: ' + o.constructionType);
-            li.appendChild(textnode);
-            ul.appendChild(li);
-
-            li = document.createElement('li');
-            textnode = document.createTextNode('Building Use: ' + o.buildingUse);
-            li.appendChild(textnode);
-            ul.appendChild(li);
-
-            li = document.createElement('li');
-            textnode = document.createTextNode('Sector: ' + o.sector);
+            textnode = document.createTextNode('Category: ' + o.category);
             li.appendChild(textnode);
             ul.appendChild(li);
 
@@ -183,60 +168,29 @@
             ul.appendChild(li);
 
             li = document.createElement('li');
-            textnode = document.createTextNode('Bidding State: ' + o.state);
+            textnode = document.createTextNode('Price: ' + o.price);
             li.appendChild(textnode);
             ul.appendChild(li);
 
             li = document.createElement('li');
-            textnode = document.createTextNode('Estimate Cost: USD$' + o.estimateCost);
+            textnode = document.createTextNode('Supplier: ' + o.supplier);
             li.appendChild(textnode);
             ul.appendChild(li);
 
-            var bids = o.proposals;
-            if (bids) {
-              bids.forEach((b, i) => {
-                var li2 = document.createElement('li');
-                textnode = document.createTextNode('Bid ' + (i+1) + ':');
-                li2.appendChild(textnode);
-                ul.appendChild(li2);
-                li2.onclick = function() {
-                  var childList = a.parentNode.getElementsByTagName('ul');
-                  for (var j = 0; j< childList.length;j++) {
-                      var state = childList[j].style.display;
-                      if (state == "none"){
-                          childList[j].style.display = "block";
-                      } else {
-                          childList[j].style.display = "none";
-                      }
-                  }
-                };
+            li = document.createElement('li');
+            textnode = document.createTextNode('Inspector: ' + o.inspector);
+            li.appendChild(textnode);
+            ul.appendChild(li);
 
-                var ul2 = document.createElement('ul');
-                ul2.style.display = "none";
-                
-                var li = document.createElement('li');
-                textnode = document.createTextNode('Transaction Id: ' + b.transactionId);
-                li.appendChild(textnode);
-                ul2.appendChild(li);
+            li = document.createElement('li');
+            textnode = document.createTextNode('Delivery Date:' + o.deliverDateTime);
+            li.appendChild(textnode);
+            ul.appendChild(li);
 
-                var li = document.createElement('li');
-                textnode = document.createTextNode('Contractor: ' + b.contractor);
-                li.appendChild(textnode);
-                ul2.appendChild(li);
-
-                var li = document.createElement('li');
-                textnode = document.createTextNode('Bid Price: ' + b.bidPrice);
-                li.appendChild(textnode);
-                ul2.appendChild(li);
-
-                var li = document.createElement('li');
-                textnode = document.createTextNode('Timestamp: ' + b.timestamp);
-                li.appendChild(textnode);
-                ul2.appendChild(li);
-
-                li2.appendChild(ul2);
-              });
-            }
+            li = document.createElement('li');
+            textnode = document.createTextNode('Inspect Date:' + o.inspectDateTime);
+            li.appendChild(textnode);
+            ul.appendChild(li);
 
             node.appendChild(ul);
 
@@ -245,6 +199,7 @@
         }
       })
       .catch(console.error);
+
   };
 
   var loadMembers = function() {
@@ -256,7 +211,7 @@
       res.forEach(o => {
         var node = document.createElement('li');
         var a = document.createElement('a');
-        var textnode = document.createTextNode(o.firstName + ' ' + o.lastName);
+        var textnode = document.createTextNode(o.name);
         a.appendChild(textnode);            
         node.appendChild(a);
 
@@ -265,11 +220,6 @@
         
         var li = document.createElement('li');
         textnode = document.createTextNode('Role: ' + role);
-        li.appendChild(textnode);
-        ul.appendChild(li);
-
-        li = document.createElement('li');
-        textnode = document.createTextNode('Email: ' + o.email);
         li.appendChild(textnode);
         ul.appendChild(li);
 
@@ -292,23 +242,30 @@
       })
       .catch(console.error);
 
-    get('http://localhost:3000/api/Contractor')
+    get('http://localhost:3000/api/GeneralContractor')
       .then(res => {
         if (res) {
-          updateMembers('Contractor', JSON.parse(res));
+          updateMembers(' General Contractor', JSON.parse(res));
         }
       })
       .catch(console.error);
   }
 
   window.addEventListener('load', function() {
-    loadProjects();
+    // test
+    localStorage.removeItem('contract_bootstrap');
+    if (!localStorage.getItem('contract_bootstrap')) {
+      bootstrap();
+      localStorage.setItem('contract_bootstrap', true);
+    }
+
+    loadAssets();
     loadMembers();
   });
 
-  var projectBtn = document.getElementById('project-load');
-  projectBtn.onclick = function() {
-    loadProjects();
+  var assetBtn = document.getElementById('asset-load');
+  assetBtn.onclick = function() {
+    loadAssets();
   };
 
   var memberBtn = document.getElementById('member-load');
@@ -316,6 +273,105 @@
     loadMembers();
   };
 
+  var bootstrap = function() {
+    // add participants
+    var req = {
+      "$class": "org.acme.construction.Owner",
+      "participantId": "PO:1",
+      "name": "Owen Owner",
+      "balance": 0
+    };
+    post('http://localhost:3000/api/Owner', req);
+
+    req = {
+      "$class": "org.acme.construction.Architect",
+      "participantId": "PA:1",
+      "name": "Alex Architect",
+      "balance": 0
+    };
+    post('http://localhost:3000/api/Architect', req);
+
+    req = {
+      "$class": "org.acme.construction.Manufacturer",
+      "participantId": "MF:1",
+      "name": "Mac Supply",
+      "balance": 0
+    };
+    post('http://localhost:3000/api/Manufacturer', req);
+
+    req = {
+      "$class": "org.acme.construction.GeneralContractor",
+      "participantId": "GC:1",
+      "name": "Gene General",
+      "balance": 0
+    };
+    post('http://localhost:3000/api/GeneralContractor', req);
+
+    req = {
+      "$class": "org.acme.construction.SubContractor",
+      "participantId": "SC:1",
+      "name": "Sup Connor",
+      "balance": 0
+    };
+    post('http://localhost:3000/api/SubContractor', req);
+
+    // add assets
+    req = {
+      "$class": "org.acme.construction.ConstructionFund",
+      "assetId": "CF:1",
+      "description": "Fund",
+      "balance": 200000,
+      "owner": "resource:org.acme.construction.Owner#PO:1"
+    };
+    post('http://localhost:3000/api/ConstructionFund', req);
+
+    req = {
+      "$class": "org.acme.construction.ConstructionWork",
+      "assetId": "CW:1",
+      "description": "Office Remodeling",
+      "type": "RENOVATION",
+      "status": "STARTED",
+      "cost": 10000,
+      "builder": "resource:org.acme.construction.SubContractor#SC:1",
+      "inspector": "resource:org.acme.construction.GeneralContractor#GC:1",
+      "finishDateTime": " ",
+      "inspectDateTime": " "
+    };
+    post('http://localhost:3000/api/ConstructionWork', req);
+
+    req = {
+      "$class": "org.acme.construction.BuildingMaterial",
+      "assetId": "BM:1",
+      "description": "Steel Truss",
+      "category": "STEEL_FRAMES",
+      "status": "ORDERED",
+      "price": 5000,
+      "supplier": "resource:org.acme.construction.Manufacturer#MF:1",
+      "inspector": "resource:org.acme.construction.GeneralContractor#GC:1",
+      "deliverDateTime": " ",
+      "inspectDateTime": " "
+    };
+    post('http://localhost:3000/api/BuildingMaterial', req);
+
+    var date = new Date();
+    var dateTime = date.toISOString();
+    req = {
+      "$class": "org.acme.construction.RequestChangeOrder",
+      "assetId": "RCO:1",
+      "description": "RCO - need more fund",
+      "budgetStatus": "DRAFT",
+      "costStatus": "DRAFT",
+      "scopeOfWork": [],
+      "createDateTime": dateTime,
+      "submitDateTime": dateTime,
+      "total": 100000,
+      "from": "resource:org.acme.construction.GeneralContractor#GC:1",
+      "to": "resource:org.acme.construction.Owner#PO:1"
+    };
+    post('http://localhost:3000/api/RequestChangeOrder', req);
+  }
+
+/*
   var submitBtn = document.getElementById('submitBid');
   submitBtn.onclick = function() {
     var req = {
@@ -337,5 +393,5 @@
 
     post('http://localhost:3000/api/CloseBidding', req);
   };
-
+*/
 })();
