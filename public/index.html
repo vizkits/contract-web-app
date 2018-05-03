@@ -173,13 +173,45 @@
           <section class="section--center mdl-grid mdl-grid--no-spacing">
             <div class="mdl-cell mdl-cell--12-col">
               <h4>Assets</h4>
+              <button type="button" id="reloadAsset">Reload</button>
             </div>
           </section>
         </div>
         <div class="mdl-layout__tab-panel" id="transactions">
           <section class="section--center mdl-grid mdl-grid--no-spacing">
             <div class="mdl-cell mdl-cell--12-col">
+              <br>
               <h4>Transactions</h4>
+              <h5>Deliver Material</h5>
+              Building Material: <input type="text" id="material" value="resource:org.acme.construction.BuildingMaterial#BM:1"/><br>
+              <button type="button" id="deliverMaterial">Deliver Material</button>
+              <br>
+              <h5>Inspect Material</h5>
+              Building Material: <input type="text" id="material" value="resource:org.acme.construction.BuildingMaterial#BM:1"/><br>
+              Status: <input type="text" id="matStatus" value="INSPECTED"/><br>
+              Inspector: <input type="text" id="inspector" value="resource:org.acme.construction.GeneralContractor#GC:1"/><br>
+              <button type="button" id="inspectMaterial">Inspect Material</button>
+
+              <br>
+
+              <h5>Finish Work</h5>
+              Construction Work: <input type="text" id="work" value="resource:org.acme.construction.ConstructionWork#CW:1"/><br>
+              <button type="button" id="finishWork">Finish Work</button>
+              <br>
+              <h5>Inspect Work</h5>
+              Construction Work: <input type="text" id="work" value="resource:org.acme.construction.ConstructionWork#CW:1"/><br>
+              Status: <input type="text" id="workStatus" value="INSPECTED"/><br>
+              Inspector: <input type="text" id="inspector" value="resource:org.acme.construction.GeneralContractor#GC:1"/><br>
+              <button type="button" id="inspectWork">Inspect Work</button>
+
+              <br>
+              <h5>Process RCO</h5>
+              RCO: <input type="text" id="rco" value="resource:org.acme.construction.RequestChangeOrder#RCO:1"/><br>
+              Status: <input type="text" id="coStatus" value="APPROVED"/><br>
+              Amount: <input type="text" id="amount" value="100000"/><br>
+              Approver: <input type="text" id="approver" value="resource:org.acme.construction.Owner#PO:1"/><br>
+              <button type="button" id="processRCO">Process RCO</button>
+
             </div>
           </section>
         </div>
