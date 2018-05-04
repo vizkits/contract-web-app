@@ -112,13 +112,15 @@
     });
   };
 
+  var host = 'http://localhost:3000';
+
   var loadAssets = function() {
     var e = document.getElementById('asset-list');
     while (e.firstChild) {
         e.removeChild(e.firstChild);
     }
 
-    get('http://localhost:3000/api/ConstructionFund')
+    get(host + '/api/ConstructionFund')
       .then(res => {
         if (res) {
           var assets = JSON.parse(res);
@@ -166,7 +168,7 @@
       })
       .catch(console.error);
  
-    get('http://localhost:3000/api/ConstructionWork')
+    get(host + '/api/ConstructionWork')
       .then(res => {
         if (res) {
           var assets = JSON.parse(res);
@@ -239,7 +241,7 @@
       })
       .catch(console.error);
       
-    get('http://localhost:3000/api/RequestChangeOrder')
+    get(host + '/api/RequestChangeOrder')
       .then(res => {
         if (res) {
           var assets = JSON.parse(res);
@@ -312,7 +314,7 @@
       })
       .catch(console.error);
 
-    get('http://localhost:3000/api/OwnerChangeOrder')
+    get(host + '/api/OwnerChangeOrder')
       .then(res => {
         if (res) {
           var assets = JSON.parse(res);
@@ -375,7 +377,7 @@
       })
       .catch(console.error);
  
-    get('http://localhost:3000/api/BuildingMaterial')
+    get(host + '/api/BuildingMaterial')
       .then(res => {
         if (res) {
           var assets = JSON.parse(res);
@@ -491,7 +493,7 @@
       });
     }
 
-    get('http://localhost:3000/api/Owner')
+    get(host + '/api/Owner')
       .then(res => {
         if (res) {
           updateMembers('Owner', JSON.parse(res));
@@ -499,7 +501,7 @@
       })
       .catch(console.error);
 
-    get('http://localhost:3000/api/Architect')
+    get(host + '/api/Architect')
       .then(res => {
         if (res) {
           updateMembers('Architect', JSON.parse(res));
@@ -507,7 +509,7 @@
       })
       .catch(console.error);
 
-    get('http://localhost:3000/api/GeneralContractor')
+    get(host + '/api/GeneralContractor')
       .then(res => {
         if (res) {
           updateMembers('General Contractor', JSON.parse(res));
@@ -515,7 +517,7 @@
       })
       .catch(console.error);
     
-    get('http://localhost:3000/api/SubContractor')
+    get(host + '/api/SubContractor')
       .then(res => {
         if (res) {
           updateMembers('Subcontractor', JSON.parse(res));
@@ -523,7 +525,7 @@
       })
       .catch(console.error);
 
-    get('http://localhost:3000/api/Manufacturer')
+    get(host + '/api/Manufacturer')
       .then(res => {
         if (res) {
           updateMembers('Manufacturer', JSON.parse(res));
@@ -533,8 +535,7 @@
   }
 
 window.addEventListener('load', function() {
-    // test
-    localStorage.removeItem('contract_bootstrap');
+    // bootstrap the first time
     if (!localStorage.getItem('contract_bootstrap')) {
       bootstrap();
       localStorage.setItem('contract_bootstrap', true);
@@ -559,42 +560,42 @@ window.addEventListener('load', function() {
     var req = {
       "$class": "org.acme.construction.Owner",
       "participantId": "PO:1",
-      "name": "Owen Owner",
+      "name": "Owen O’Connor",
       "balance": 0
     };
-    post('http://localhost:3000/api/Owner', req);
+    post(host + '/api/Owner', req);
 
     req = {
       "$class": "org.acme.construction.Architect",
       "participantId": "PA:1",
-      "name": "Alex Architect",
+      "name": "Alex Abril",
       "balance": 0
     };
-    post('http://localhost:3000/api/Architect', req);
+    post(host + '/api/Architect', req);
 
     req = {
       "$class": "org.acme.construction.Manufacturer",
       "participantId": "MF:1",
-      "name": "Mac Supply",
+      "name": "Mac Mahanna",
       "balance": 0
     };
-    post('http://localhost:3000/api/Manufacturer', req);
+    post(host + '/api/Manufacturer', req);
 
     req = {
       "$class": "org.acme.construction.GeneralContractor",
       "participantId": "GC:1",
-      "name": "Gene General",
+      "name": "Gabriel Gack",
       "balance": 0
     };
-    post('http://localhost:3000/api/GeneralContractor', req);
+    post(host + '/api/GeneralContractor', req);
 
     req = {
       "$class": "org.acme.construction.SubContractor",
       "participantId": "SC:1",
-      "name": "Sup Connor",
+      "name": "Sam Sachs",
       "balance": 0
     };
-    post('http://localhost:3000/api/SubContractor', req);
+    post(host + '/api/SubContractor', req);
 
     // add assets
     req = {
@@ -604,7 +605,7 @@ window.addEventListener('load', function() {
       "balance": 200000,
       "owner": "resource:org.acme.construction.Owner#PO:1"
     };
-    post('http://localhost:3000/api/ConstructionFund', req);
+    post(host + '/api/ConstructionFund', req);
 
     req = {
       "$class": "org.acme.construction.ConstructionWork",
@@ -618,7 +619,7 @@ window.addEventListener('load', function() {
       "finishDateTime": " ",
       "inspectDateTime": " "
     };
-    post('http://localhost:3000/api/ConstructionWork', req);
+    post(host + '/api/ConstructionWork', req);
 
     req = {
       "$class": "org.acme.construction.BuildingMaterial",
@@ -632,7 +633,7 @@ window.addEventListener('load', function() {
       "deliverDateTime": " ",
       "inspectDateTime": " "
     };
-    post('http://localhost:3000/api/BuildingMaterial', req);
+    post(host + '/api/BuildingMaterial', req);
 
     var date = new Date();
     var dateTime = date.toISOString();
@@ -649,7 +650,7 @@ window.addEventListener('load', function() {
       "from": "resource:org.acme.construction.GeneralContractor#GC:1",
       "to": "resource:org.acme.construction.Owner#PO:1"
     };
-    post('http://localhost:3000/api/RequestChangeOrder', req);
+    post(host + '/api/RequestChangeOrder', req);
   }
 
   var deliverMatBtn = document.getElementById('deliverMaterial');
@@ -659,7 +660,7 @@ window.addEventListener('load', function() {
       "material": document.getElementById('material').value
     };
 
-    post('http://localhost:3000/api/DeliverMaterial', req);
+    post(host + '/api/DeliverMaterial', req);
   };
 
   var inspectMatBtn = document.getElementById('inspectMaterial');
@@ -671,7 +672,7 @@ window.addEventListener('load', function() {
       "inspector": document.getElementById('inspector').value
     };
 
-    post('http://localhost:3000/api/InspectMaterial', req);
+    post(host + '/api/InspectMaterial', req);
   };
 
   var finishWorkBtn = document.getElementById('finishWork');
@@ -681,7 +682,7 @@ window.addEventListener('load', function() {
       "work": document.getElementById('work').value
     };
 
-    post('http://localhost:3000/api/FinishWork', req);
+    post(host + '/api/FinishWork', req);
   };
 
   var inspectWorkBtn = document.getElementById('inspectWork');
@@ -693,7 +694,7 @@ window.addEventListener('load', function() {
       "inspector": document.getElementById('inspector').value
     };
 
-    post('http://localhost:3000/api/InspectWork', req);
+    post(host + '/api/InspectWork', req);
   };
 
   var processRCOBtn = document.getElementById('processRCO');
@@ -706,11 +707,16 @@ window.addEventListener('load', function() {
       "approver": document.getElementById('approver').value
     };
 
-    post('http://localhost:3000/api/ProcessRCO', req);
+    post(host + '/api/ProcessRCO', req);
   };
 
   var reloadAssetBtn = document.getElementById('reloadAsset');
   reloadAssetBtn.onclick = function() {
     loadAssets();
+  };
+
+  var reloadMembersBtn = document.getElementById('reloadMembers');
+  reloadMembersBtn.onclick = function() {
+    loadMembers();
   };
 })();
